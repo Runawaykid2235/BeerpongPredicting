@@ -2,22 +2,23 @@ import random
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.27,
-    'Player2': 0.35,
-    'Player3': 0.41,
-    'Player4': 0.24,
+    'Player1': 0.5,
+    'Player2': 0.5,
+    'Player3': 0.5,
+    'Player4': 0.5,
 }
 
 # Define teams
 team1 = ['Player1', 'Player2']
 team2 = ['Player3', 'Player4']
 
-# Simulate a single game
+
 def simulate_game(team1, team2, player_accuracies):
     cups_team1 = 10
     cups_team2 = 10
-    players = team1 + team2
     turn = 0
+
+    # add calculations for other odds for example if it goes to redemption or not
 
     #we need to make sure its a random team that starts each time
     #first we pick a team to start
@@ -82,7 +83,7 @@ def calculate_odds(team1_wins, team2_wins, number_games, margin):
     return odds_team1, odds_team2
 
 # Number of simulations
-num_games = 100000
+num_games = 10000
 margin = 0.90  # overrun as a decimal
 
 # Run the simulations
