@@ -73,7 +73,7 @@ def simulate_game(team1, team2, player_accuracies):
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.5,
+    'Player1': 0.2,
     'Player2': 0.5,
     'Player3': 0.5,
     'Player4': 0.5,
@@ -83,11 +83,35 @@ player_accuracies = {
 team1 = ['Player1', 'Player2']
 team2 = ['Player3', 'Player4']
 
-# Simulate a game
-result = simulate_game(team1, team2, player_accuracies)
+# Simulate 1000 games
+games = 100000
+team1_wins = 0
+team2_wins = 0
+total_tosses_team1 = 0
+total_tosses_team2 = 0
+first_cup_hit_team1 = 0
+first_cup_hit_team2 = 0
 
+for _ in range(games):
+    result = simulate_game(team1, team2, player_accuracies)
+    
+    if result['winner'] == 'team1':
+        team1_wins += 1
+    else:
+        team2_wins += 1
 
-print(result)
+    total_tosses_team1 += result['total_tosses_team1']
+    total_tosses_team2 += result['total_tosses_team2']
+    
+    if result['first_cup_hit'] == 'team1':
+        first_cup_hit_team1 += 1
+    else:
+        first_cup_hit_team2 += 1
 
-
-
+# Calculate and print statistics
+print(f"Team 1 Wins: {team1_wins} ({team1_wins/games*100:.2f}%)")
+print(f"Team 2 Wins: {team2_wins} ({team2_wins/games*100:.2f}%)")
+print(f"Average Tosses by Team 1: {total_tosses_team1/games:.2f}")
+print(f"Average Tosses by Team 2: {total_tosses_team2/games:.2f}")
+print(f"First Cup Hit by Team 1: {first_cup_hit_team1} times ({first_cup_hit_team1/games*100:.2f}%)")
+print(f"First Cup Hit by Team 2: {first_cup_hit_team2} times ({first_cup_hit_team2/games*100:.2f}%)")
