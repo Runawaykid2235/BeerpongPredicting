@@ -71,6 +71,41 @@ def simulate_game(team1, team2, player_accuracies):
 
     return results
 
+
+
+def simulate_multiple_games(num_games, team1, team2, player_accuracies):
+    game_num = 0
+    tally = {
+        'total_tosses_team1': 0,
+        'total_tosses_team2': 0,
+        'team1_total_cups_left': 0,
+        'team2_total_cups_left': 0,
+    }
+
+    for _ in range(num_games):
+        print(f"{game_num}/{num_games} {round(game_num / num_games * 100)}%")
+        game_num += 1
+
+        result = simulate_game(team1, team2, player_accuracies)
+        
+        # Update numerical values
+        tally['total_tosses_team1'] += result.get('total_tosses_team1', 0)
+        tally['total_tosses_team2'] += result.get('total_tosses_team2', 0)
+        tally['team1_total_cups_left'] += result.get('team1_total_cups_left', 0)
+        tally['team2_total_cups_left'] += result.get('team2_total_cups_left', 0)
+
+        #add some averages
+        tally['average_tosses_team1_pr_game'] = tally['total_tosses_team1'] / num_games
+        tally['average_tosses_team2_pr_game'] = tally['total_tosses_team2'] / num_games
+        
+
+
+
+    return tally
+
+
+
+
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
     'Player1': 0.5,
@@ -83,11 +118,11 @@ player_accuracies = {
 team1 = ['Player1', 'Player2']
 team2 = ['Player3', 'Player4']
 
-# Simulate a game
-result = simulate_game(team1, team2, player_accuracies)
+
+num_games = 10000
+
+results = simulate_multiple_games(num_games, team1, team2, player_accuracies)
 
 
-print(result)
-
-
+print(results)
 
