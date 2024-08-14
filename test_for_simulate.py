@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 def simulate_game(team1, team2, player_accuracies):
     cups_team1 = 10
@@ -123,8 +124,8 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.5,
-    'Player2': 0.5,
+    'Player1': 0.3,
+    'Player2': 0.4,
     'Player3': 0.5,
     'Player4': 0.5,
 }
@@ -141,3 +142,20 @@ results = simulate_multiple_games(num_games, team1, team2, player_accuracies)
 
 print(results)
 
+# Example: Plotting the average cups left per game for each team
+labels = ['Team 1', 'Team 2']
+average_cups_left = [
+    results['average_cups_left_team1_pr_game'],
+    results['average_cups_left_team2_pr_game']
+]
+
+# Create a bar chart
+plt.bar(labels, average_cups_left, color=['red', 'orange'])
+
+# Adding title and labels
+plt.title('Average Cups Left Per Game')
+plt.xlabel('Teams')
+plt.ylabel('Average Cups Left')
+
+# Display the chart
+plt.show()
