@@ -27,6 +27,12 @@ def simulate_game(team1, team2, player_accuracies):
         accuracy = player_accuracies[current_player]
 
         # Simulate the shot
+        
+        if current_team == team1 and cups_team2 == 1 or current_team == team2 and cups_team1 == 1:
+            #introducing a critical hit factor, so players perform worse on last shot because of pressure
+            accuracy -= 0.05 # perform 5% worse when in critical shot
+                
+
         if random.random() < accuracy:
             if current_team == team1:
                 cups_team2 -= 1
