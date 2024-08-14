@@ -98,7 +98,16 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         tally['average_tosses_team1_pr_game'] = tally['total_tosses_team1'] / num_games
         tally['average_tosses_team2_pr_game'] = tally['total_tosses_team2'] / num_games
         
-
+        tally['average_cups_left_team1_pr_game'] = tally['team1_total_cups_left'] / num_games
+        tally['average_cups_left_team2_pr_game'] = tally['team2_total_cups_left'] / num_games
+        
+        #adding total tosses odds to later provide over under total amount of tosses
+        tally['total_average_tosses'] = (tally['total_tosses_team1'] + tally['total_tosses_team2']) / num_games
+        
+        #adding total cups over under 
+        #as they are already averaged noneed to divide by num_games
+        tally['average_cups_left'] = (tally['average_cups_left_team1_pr_game'] + tally['average_cups_left_team2_pr_game'])
+        
 
 
     return tally
