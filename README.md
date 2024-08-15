@@ -1,14 +1,11 @@
-Calculate beerpong odds by simulating millions of games. 
+Beerpong Predicting
+Overview
+Beerpong Predicting is a Python-based simulator designed to calculate odds for various events in a beerpong game. By simulating millions of matches, the tool provides probabilities for different outcomes based on player accuracies. This project is ideal for anyone interested in game simulations, probability calculations, or just having some fun with data.
 
-Add player accuracies for each team, run the simulation, it will calculate the probability of multiple odds like: 
-- first team to toss ball
-- first team to hit cup
-- total tosses over under
-- plans to implement way more
-
-You can also add specific override (margin) to the odds, to maximise profits.
-
-Plans to implement profit calculations based on amount of players and average bet amount
-Plans to add a GUI
-Plans to add website so customers can clearly see all odds
-Plans to add tournament features
+Features
+Simulate Beerpong Games: Input player accuracies for two teams and simulate matches to calculate odds.
+Odds Calculated:
+First team to toss the ball
+First team to hit a cup
+Total tosses (over/under)
+Custom Margins: Override the calculated odds with specific margins to optimize for different scenarios or maximize profits.
