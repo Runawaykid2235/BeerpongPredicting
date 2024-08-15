@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 def simulate_game(team1, team2, player_accuracies):
     cups_team1 = 10
     cups_team2 = 10
+    critical_shots = 0
 
     tosses_team1 = 0
     tosses_team2 = 0
@@ -32,7 +33,8 @@ def simulate_game(team1, team2, player_accuracies):
         if current_team == team1 and cups_team2 == 1 or current_team == team2 and cups_team1 == 1:
             #introducing a critical hit factor, so players perform worse on last shot because of pressure
             accuracy -= 0.05 # perform 5% worse when in critical shot
-                
+            critical_shots += 1
+
 
         if random.random() < accuracy:
             if current_team == team1:
@@ -73,6 +75,9 @@ def simulate_game(team1, team2, player_accuracies):
 
     results['team1_total_cups_left'] = cups_team1
     results['team2_total_cups_left'] = cups_team2
+    
+    #add how many critical shots were took
+    results['total_critical_shots'] = critical_shots
 
     results['first_toss'] = 'team1' if start_team == 1 else 'team2'
 
@@ -87,6 +92,7 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         'total_tosses_team2': 0,
         'team1_total_cups_left': 0,
         'team2_total_cups_left': 0,
+        'total_critical_shots': 0
     }
 
     for _ in range(num_games):
@@ -100,6 +106,7 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         tally['total_tosses_team2'] += result.get('total_tosses_team2', 0)
         tally['team1_total_cups_left'] += result.get('team1_total_cups_left', 0)
         tally['team2_total_cups_left'] += result.get('team2_total_cups_left', 0)
+        tally['total_critical_shots'] += result.get('total_critical_shots', 0)
 
         #add some averages
         tally['average_tosses_team1_pr_game'] = tally['total_tosses_team1'] / num_games
@@ -107,12 +114,14 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         
         tally['average_cups_left_team1_pr_game'] = tally['team1_total_cups_left'] / num_games
         tally['average_cups_left_team2_pr_game'] = tally['team2_total_cups_left'] / num_games
+
+        tally['averaged_critical_shots'] = tally['total_critical_shots'] / num_games
         
         #adding total tosses odds to later provide over under total amount of tosses
         tally['total_average_tosses'] = (tally['total_tosses_team1'] + tally['total_tosses_team2']) / num_games
         
         #adding total cups over under 
-        #as they are already averaged noneed to divide by num_games
+        #as they are already averaged no need to divide by num_games
         tally['average_cups_left'] = (tally['average_cups_left_team1_pr_game'] + tally['average_cups_left_team2_pr_game'])
         
 
@@ -148,6 +157,8 @@ average_cups_left = [
     results['average_cups_left_team1_pr_game'],
     results['average_cups_left_team2_pr_game']
 ]
+
+
 
 # Create a bar chart
 plt.bar(labels, average_cups_left, color=['red', 'orange'])
