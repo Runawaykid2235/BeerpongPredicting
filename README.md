@@ -1,5 +1,6 @@
 
 **Beerpong Predicting**
+
 Beerpong Predicting is a Python-based simulator designed to calculate odds for various events in a beerpong game. By simulating millions of matches, the tool provides probabilities for different outcomes based on player accuracies. This project is ideal for anyone interested in game simulations, probability calculations, or just having some fun with data.
 
 Features
