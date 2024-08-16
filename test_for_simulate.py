@@ -92,7 +92,9 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         'total_tosses_team2': 0,
         'team1_total_cups_left': 0,
         'team2_total_cups_left': 0,
-        'total_critical_shots': 0
+        'total_critical_shots': 0,
+        'total_wins_team1': 0,
+        'total_wins_team2': 0
     }
 
     for _ in range(num_games):
@@ -100,8 +102,16 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
         game_num += 1
 
         result = simulate_game(team1, team2, player_accuracies)
-        
+
         # Update numerical values
+        if result.get('winner') == 'team1':
+            tally['total_wins_team1'] += 1 
+        else:
+            tally['total_wins_team2'] += 1
+        
+        
+        
+        
         tally['total_tosses_team1'] += result.get('total_tosses_team1', 0)
         tally['total_tosses_team2'] += result.get('total_tosses_team2', 0)
         tally['team1_total_cups_left'] += result.get('team1_total_cups_left', 0)
@@ -133,8 +143,8 @@ def simulate_multiple_games(num_games, team1, team2, player_accuracies):
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.3,
-    'Player2': 0.4,
+    'Player1': 0.5,
+    'Player2': 0.5,
     'Player3': 0.5,
     'Player4': 0.5,
 }
@@ -160,13 +170,49 @@ average_cups_left = [
 
 
 
+def calculate_odds(results, number_games, margin):
+    #so we recieve the game results as a dict like {'total_tosses_team1': 191860, 'total_tosses_team2': 195369, 'team1_total_cups_left': 3397, 'team2_total_cups_left': 33300, 'total_critical_shots': 23861, 'average_tosses_team1_pr_game': 19.186, 'average_tosses_team2_pr_game': 19.5369, 'average_cups_left_team1_pr_game': 0.3397, 'average_cups_left_team2_pr_game': 3.33, 'averaged_critical_shots': 2.3861, 'total_average_tosses': 38.7229, 'average_cups_left': 3.6697}    
+    team1_wins = results.get('total_wins_team1', 0)
+    team2_wins = results.get('total_wins_team2', 0)
+
+    print(team1_wins)
+    print(team2_wins)
+
+    #the first odds for win team1 or team2
+    chance_team1 = team1_wins / number_games
+    chance_team2 = team2_wins / number_games
+
+    odds_team1 = margin / chance_team1
+    odds_team2 = margin / chance_team2
+
+    odds_team1 = round(odds_team1, 2)
+    odds_team2 = round(odds_team2, 2)
+
+    if odds_team1 < 1:
+        odds_team1 = 1.01
+    if odds_team2 < 1:
+        odds_team2 = 1.01
+
+
+    return odds_team1, odds_team2
+
+
+#overrun is how much margin we allow us (bookmaker)to have
+overrun = 0.90
+
+
+results_odds = calculate_odds(results, num_games, overrun)
+print(results_odds)
+
+
+
 # Create a bar chart
-plt.bar(labels, average_cups_left, color=['red', 'orange'])
+#plt.bar(labels, average_cups_left, color=['red', 'orange'])
 
 # Adding title and labels
-plt.title('Average Cups Left Per Game')
-plt.xlabel('Teams')
-plt.ylabel('Average Cups Left')
+#plt.title('Average Cups Left Per Game')
+#plt.xlabel('Teams')
+#plt.ylabel('Average Cups Left')
 
 # Display the chart
-plt.show()
+#plt.show()
