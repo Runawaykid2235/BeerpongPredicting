@@ -168,6 +168,23 @@ class OddsCalculator:
 
 
         return  f"odds team1 = {odds_team1}  -  odds team2 = {odds_team2}"
+    
+    def calculate_over_under_cups(results, number_games, margin):
+        pass
+
+
+    def calculate_over_under_throws(results,number_games, margin):
+        pass
+
+
+    def calculate_MVP(results, number_games, margin):
+        #the mvp of a match is the player who hits the most cups
+        pass
+
+    def calculate_consecutive_hits(results, number_games, margin):
+        #if a team hits multiple cups in a row say 2 or more then they get consecutive hits
+        pass
+
 
 
 

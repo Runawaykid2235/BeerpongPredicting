@@ -1,5 +1,0 @@
-import random
-
-def simulate_game_with_rerack():
-    #we need to know how the accuracy changes based on what rerack was chosen
-    pass
