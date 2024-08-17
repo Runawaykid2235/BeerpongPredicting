@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 class SimulateGames:
     def simulate_game(team1, team2, player_accuracies):
+        #need to tally each game how many throwsfor over under fixing odds
+
         cups_team1 = 10
         cups_team2 = 10
         critical_shots = 0
