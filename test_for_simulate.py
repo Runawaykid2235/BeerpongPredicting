@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 class SimulateGames:
     def simulate_game(team1, team2, player_accuracies):
         #need to tally each game how many throwsfor over under fixing odds
+        
 
         cups_team1 = 10
         cups_team2 = 10
@@ -98,8 +99,20 @@ class SimulateGames:
             'team2_total_cups_left': 0,
             'total_critical_shots': 0,
             'total_wins_team1': 0,
-            'total_wins_team2': 0
+            'total_wins_team2': 0,
+            'under_10_tosses': 0
         }
+
+        categories_for_over_under_tosses = {
+            10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 
+            20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 
+            30: 0, 31: 0, 32: 0, 33: 0, 34: 0, 35: 0, 36: 0, 37: 0, 38: 0, 39: 0, 
+            40: 0
+        }
+
+        #add the categories for over under tosses to the tally dict
+        tally['categories_for_over_under_tosses_nested'] = categories_for_over_under_tosses
+
 
         for _ in range(num_games):
             print(f"{game_num}/{num_games} {round(game_num / num_games * 100)}%")
@@ -115,8 +128,20 @@ class SimulateGames:
             
             
             
-            
+            #implement over under total tosses by arranging them in categories like 10 or below, 11, 12, 13, so on
             tally['total_tosses_team1'] += result.get('total_tosses_team1', 0)
+
+
+
+            total_tosses_team1 = result.get('total_tosses_team1')
+
+            if total_tosses_team1 in categories_for_over_under_tosses:
+                # Increment the corresponding value by 1
+                tally['categories_for_over_under_tosses_nested'][total_tosses_team1] += 1
+
+
+
+
             tally['total_tosses_team2'] += result.get('total_tosses_team2', 0)
             tally['team1_total_cups_left'] += result.get('team1_total_cups_left', 0)
             tally['team2_total_cups_left'] += result.get('team2_total_cups_left', 0)
