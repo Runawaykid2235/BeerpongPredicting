@@ -103,16 +103,34 @@ class SimulateGames:
             'under_10_tosses': 0
         }
 
-        categories_for_over_under_tosses = {
+        categories_for_over_under_tosses_team1 = {
             10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 
             20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 
             30: 0, 31: 0, 32: 0, 33: 0, 34: 0, 35: 0, 36: 0, 37: 0, 38: 0, 39: 0, 
             40: 0
         }
 
-        #add the categories for over under tosses to the tally dict
-        tally['categories_for_over_under_tosses_nested'] = categories_for_over_under_tosses
 
+        categories_for_over_under_tosses_team2 = {
+            10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 
+            20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 
+            30: 0, 31: 0, 32: 0, 33: 0, 34: 0, 35: 0, 36: 0, 37: 0, 38: 0, 39: 0, 
+            40: 0
+        }
+
+        categories_for_over_under_cups_left_team1 = {0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}
+        categories_for_over_under_cups_left_team2 = {0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}
+
+
+        #add the categories for over under tosses to the tally dict
+        tally['categories_for_over_under_tosses_nested_team1'] = categories_for_over_under_tosses_team1
+        tally['categories_for_over_under_tosses_nested_team2'] = categories_for_over_under_tosses_team2
+
+        #add the categories for over under cups left
+        tally['categories_for_over_under_cups_left_nested_team1'] = categories_for_over_under_cups_left_team1
+        tally['categories_for_over_under_cups_left_nested_team2'] = categories_for_over_under_cups_left_team2
+        
+        
 
         for _ in range(num_games):
             print(f"{game_num}/{num_games} {round(game_num / num_games * 100)}%")
@@ -126,19 +144,34 @@ class SimulateGames:
             else:
                 tally['total_wins_team2'] += 1
             
-            
-            
+
             #implement over under total tosses by arranging them in categories like 10 or below, 11, 12, 13, so on
             tally['total_tosses_team1'] += result.get('total_tosses_team1', 0)
-
+            tally['total_tosses_team2'] += result.get('total_tosses_team2', 0)
 
 
             total_tosses_team1 = result.get('total_tosses_team1')
+            total_tosses_team2 = result.get('total_tosses_team2')
 
-            if total_tosses_team1 in categories_for_over_under_tosses:
+            total_cups_left_team1 = result.get('team1_total_cups_left')
+            total_cups_left_team2 = result.get('team2_total_cups_left')
+            
+
+            if total_tosses_team1 in categories_for_over_under_tosses_team1:
                 # Increment the corresponding value by 1
-                tally['categories_for_over_under_tosses_nested'][total_tosses_team1] += 1
+                tally['categories_for_over_under_tosses_nested_team1'][total_tosses_team1] += 1
 
+
+            if total_tosses_team2 in categories_for_over_under_tosses_team2:
+                # Increment the corresponding value by 1
+                tally['categories_for_over_under_tosses_nested_team2'][total_tosses_team2] += 1
+
+
+            if total_cups_left_team1 in categories_for_over_under_cups_left_team1:
+                tally['categories_for_over_under_cups_left_nested_team1'][total_cups_left_team1] += 1
+
+            if total_cups_left_team2 in categories_for_over_under_cups_left_team2:
+                tally['categories_for_over_under_cups_left_nested_team2'][total_cups_left_team2] += 1
 
 
 
@@ -182,6 +215,13 @@ class OddsCalculator:
         chance_team1 = team1_wins / number_games
         chance_team2 = team2_wins / number_games
 
+        if chance_team1 == 0:
+            chance_team1 += 0.0001
+
+        if chance_team2 == 0:
+            chance_team2 += 0.0001
+            
+
         odds_team1 = margin / chance_team1
         odds_team2 = margin / chance_team2
 
@@ -220,10 +260,10 @@ class OddsCalculator:
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.5,
-    'Player2': 0.5,
-    'Player3': 0.5,
-    'Player4': 0.5,
+    'Player1': 0.60,
+    'Player2': 0.40,
+    'Player3': 0.35,
+    'Player4': 0.67,
 }
 
 # Define teams
