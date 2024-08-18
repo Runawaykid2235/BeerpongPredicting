@@ -237,7 +237,41 @@ class OddsCalculator:
         return  f"odds team1 = {odds_team1}  -  odds team2 = {odds_team2}"
     
     def calculate_over_under_cups(results, number_games, margin):
-        pass
+        #calculating over under odds requires first getting the values from the nested hashmaps
+        team1_cups_left_dict = results['categories_for_over_under_cups_left_nested_team1']
+        team2_cups_left_dict = results['categories_for_over_under_cups_left_nested_team2']
+
+        #turn the hashmaps into percentages
+        for cat in team1_cups_left_dict:
+            #iterate the hashmap / num_games and * 100 i think
+            team1_cups_left_dict[cat] = (team1_cups_left_dict[cat] / num_games) * 100
+
+        for cat in team2_cups_left_dict:
+            #iterate the hashmap / num_games and * 100 i think
+            team2_cups_left_dict[cat] = (team2_cups_left_dict[cat] / num_games) * 100
+
+        
+
+
+
+
+        #divide by margin to get overrun
+        for cat in team1_cups_left_dict:
+            team1_cups_left_dict[cat] =  margin / (team1_cups_left_dict[cat] + 0.0000001) # avoid timing by 0
+
+        #calc odds
+        for odds in team1_cups_left_dict:
+            team1_cups_left_dict[odds] = round(team1_cups_left_dict[odds], 2)
+            if team1_cups_left_dict[odds] < 1:
+                team1_cups_left_dict[odds] = 1.01
+
+
+        print(team1_cups_left_dict)
+
+
+
+
+
 
 
     def calculate_over_under_throws(results,number_games, margin):
@@ -260,10 +294,10 @@ class OddsCalculator:
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.60,
+    'Player1': 0.30,
     'Player2': 0.40,
     'Player3': 0.35,
-    'Player4': 0.67,
+    'Player4': 0.37,
 }
 
 # Define teams
@@ -296,6 +330,7 @@ overrun = 0.90
 results_odds = OddsCalculator.calculate_winner_odds(results, num_games, overrun)
 print(results_odds)
 
+OddsCalculator.calculate_over_under_cups(results, num_games, overrun)
 
 
 # Create a bar chart
