@@ -237,40 +237,63 @@ class OddsCalculator:
         return  f"odds team1 = {odds_team1}  -  odds team2 = {odds_team2}"
     
     def calculate_over_under_cups(results, number_games, margin):
-        #calculating over under odds requires first getting the values from the nested hashmaps
+        # Extract dictionaries for cups left
         team1_cups_left_dict = results['categories_for_over_under_cups_left_nested_team1']
         team2_cups_left_dict = results['categories_for_over_under_cups_left_nested_team2']
 
-        #turn the hashmaps into percentages
+        # Convert counts to percentages
         for cat in team1_cups_left_dict:
-            #iterate the hashmap / num_games and * 100 i think
-            team1_cups_left_dict[cat] = (team1_cups_left_dict[cat] / num_games) * 100
+            team1_cups_left_dict[cat] = (team1_cups_left_dict[cat] / number_games) * 100
 
         for cat in team2_cups_left_dict:
-            #iterate the hashmap / num_games and * 100 i think
-            team2_cups_left_dict[cat] = (team2_cups_left_dict[cat] / num_games) * 100
+            team2_cups_left_dict[cat] = (team2_cups_left_dict[cat] / number_games) * 100
 
-        
+        under_odds_team1 = {}
+        over_odds_team1 = {}
 
-
-
-
-        #divide by margin to get overrun
-        for cat in team1_cups_left_dict:
-            team1_cups_left_dict[cat] =  margin / (team1_cups_left_dict[cat] + 0.0000001) # avoid timing by 0
-
-        #calc odds
-        for odds in team1_cups_left_dict:
-            team1_cups_left_dict[odds] = round(team1_cups_left_dict[odds], 2)
-            if team1_cups_left_dict[odds] < 1:
-                team1_cups_left_dict[odds] = 1.01
+        under_odds_team2 = {}
+        over_odds_team2 = {}
 
 
-        print(team1_cups_left_dict)
+        for key in team1_cups_left_dict:
+            current_under_total = 0
+
+            for num in team1_cups_left_dict:
+                if num < key:
+                    current_under_total += team1_cups_left_dict[num]
+                under_odds_team1[key] = round((margin / (current_under_total + 0.000001)) * 100, 2)
+
+        for key in team1_cups_left_dict:
+            current_over_total = 0
+
+            for num in team1_cups_left_dict:
+                if num > key:
+                    current_over_total += team1_cups_left_dict[num]
+                over_odds_team1[key] =  round((margin / (current_over_total + 0.000001)) * 100, 2)
 
 
+        for key in team2_cups_left_dict:
+            current_under_total = 0
 
+            for num in team2_cups_left_dict:
+                if num < key:
+                    current_under_total += team2_cups_left_dict[num]
+                under_odds_team2[key] =  round((margin / (current_under_total + 0.000001)) * 100, 2)
 
+        for key in team2_cups_left_dict:
+            current_over_total = 0
+
+            for num in team2_cups_left_dict:
+                if num > key:
+                    current_over_total += team2_cups_left_dict[num]
+                over_odds_team2[key] =  round((margin / (current_over_total + 0.000001)) * 100, 2)
+
+                
+
+        print(f"under odds team1: {under_odds_team1}")
+        print(f"over odds team2: {over_odds_team1}")    
+        print(f"under odds team1: {under_odds_team2}")
+        print(f"over odds team2: {over_odds_team2}")    
 
 
 
@@ -294,10 +317,10 @@ class OddsCalculator:
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.30,
-    'Player2': 0.40,
-    'Player3': 0.35,
-    'Player4': 0.37,
+    'Player1': 0.50,
+    'Player2': 0.50,
+    'Player3': 0.5,
+    'Player4': 0.5,
 }
 
 # Define teams
@@ -324,7 +347,7 @@ average_cups_left = [
 
 
 #overrun is how much margin we allow us (bookmaker)to have
-overrun = 0.90
+overrun = 0.80
 
 
 results_odds = OddsCalculator.calculate_winner_odds(results, num_games, overrun)
