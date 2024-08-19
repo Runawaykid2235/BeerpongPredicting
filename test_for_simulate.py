@@ -298,7 +298,58 @@ class OddsCalculator:
 
 
     def calculate_over_under_throws(results,number_games, margin):
-        pass
+        #now to calculate overunder throws its alot like calculating the over under cups left, but we might want to do total tosses
+        # Extract dictionaries for cups left
+        team1_tosses = results['categories_for_over_under_cups_left_nested_team1']
+        team2_tosses = results['categories_for_over_under_cups_left_nested_team2']
+
+        total_team_tosses = {}
+
+        # Summing up the tosses
+        for key in team1_tosses:
+            if key in team2_tosses:
+                total_team_tosses[key] = team1_tosses[key] + team2_tosses[key]
+            else:
+                total_team_tosses[key] = team1_tosses[key]
+
+        for key in team2_tosses:
+            if key not in total_team_tosses:
+                total_team_tosses[key] = team2_tosses[key]
+
+        # Convert counts to percentages
+        for cat in total_team_tosses:
+            total_team_tosses[cat] = (total_team_tosses[cat] / number_games) * 100
+
+        under_odds = {}
+        over_odds = {}
+
+        # Calculate under odds
+        for key in total_team_tosses:
+            current_under_total = 0
+            for num in total_team_tosses:
+                if num < key:
+                    current_under_total += total_team_tosses[num]
+            if current_under_total > 0:
+                under_odds[key] = round((margin / current_under_total) * 100, 2)
+            else:
+                under_odds[key] = float('inf')  # or some other indicator for no data
+
+        # Calculate over odds
+        for key in total_team_tosses:
+            current_over_total = 0
+            for num in total_team_tosses:
+                if num > key:
+                    current_over_total += total_team_tosses[num]
+            if current_over_total > 0:
+                over_odds[key] = round((margin / current_over_total) * 100, 2)
+            else:
+                over_odds[key] = float('inf')  # or some other indicator for no data
+
+        print(f"total team list = {over_odds}, {under_odds}")
+
+
+
+
 
 
     def calculate_MVP(results, number_games, margin):
@@ -353,7 +404,7 @@ overrun = 0.80
 results_odds = OddsCalculator.calculate_winner_odds(results, num_games, overrun)
 print(results_odds)
 
-OddsCalculator.calculate_over_under_cups(results, num_games, overrun)
+OddsCalculator.calculate_over_under_throws(results, num_games, overrun)
 
 
 # Create a bar chart
