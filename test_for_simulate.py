@@ -26,6 +26,8 @@ class SimulateGames:
         cups_team2 = 10
         critical_shots = 0
 
+        cups_hit_pr_player = {'Player1': 0, 'Player2': 0, 'Player3': 0, 'Player4': 0}
+
         tosses_team1 = 0
         tosses_team2 = 0
 
@@ -58,12 +60,16 @@ class SimulateGames:
 
             if random.random() < accuracy:
                 if current_team == team1:
+                    cups_hit_pr_player[current_player] += 1
+
+
                     cups_team2 -= 1
                     tosses_team1 += 1
                     if first_cup_flag:
                         results['first_cup_hit'] = 'team1'
                         first_cup_flag = False
                 else:
+                    cups_hit_pr_player[current_player] += 1
                     cups_team1 -= 1
                     tosses_team2 += 1
                     if first_cup_flag:
@@ -89,6 +95,8 @@ class SimulateGames:
             results['winner'] = 'team2'
         else:
             results['winner'] = 'team1'
+
+        results['nested_player_cups_hit_dict'] = cups_hit_pr_player
 
         results['total_tosses_team1'] = tosses_team1
         results['total_tosses_team2'] = tosses_team2
@@ -130,7 +138,13 @@ class SimulateGames:
             'total_critical_shots': 0,
             'total_wins_team1': 0,
             'total_wins_team2': 0,
-            'under_10_tosses': 0
+            'under_10_tosses': 0,
+            'cups_hit_pr_player': {
+                'Player1': 0,
+                'Player2': 0,
+                'Player3': 0,
+                'Player4': 0
+                }
         }
 
         categories_for_over_under_tosses_team1 = {
@@ -209,6 +223,9 @@ class SimulateGames:
             tally['team1_total_cups_left'] += result.get('team1_total_cups_left', 0)
             tally['team2_total_cups_left'] += result.get('team2_total_cups_left', 0)
             tally['total_critical_shots'] += result.get('total_critical_shots', 0)
+
+            for player, hits in result['nested_player_cups_hit_dict'].items():
+                tally['cups_hit_pr_player'][player] += hits
 
             #add some averages
             tally['average_tosses_team1_pr_game'] = tally['total_tosses_team1'] / num_games
@@ -408,16 +425,29 @@ class OddsCalculator:
             else:
                 over_odds[key] = float('inf')  # or some other indicator for no data
 
-        print(f"total team list = {over_odds}, {under_odds}")
-
-
-
-
 
 
     def calculate_MVP(results, number_games, margin):
         #the mvp of a match is the player who hits the most cups
-        pass
+        #get player stats
+        player_hits = results['cups_hit_pr_player']
+
+        total = 0
+
+        for key in player_hits:
+            total += player_hits[key]
+
+        print(total)
+
+        #calculate percentage
+        for key in player_hits:
+            player_hits[key] = player_hits[key] / total * 100
+
+        #convert to decimal odds
+        for key in player_hits:
+            player_hits[key] = round((margin / player_hits[key]) * 100, 2)
+
+        print(player_hits)
 
     def calculate_consecutive_hits(results, number_games, margin):
         #if a team hits multiple cups in a row say 2 or more then they get consecutive hits
@@ -431,8 +461,8 @@ class OddsCalculator:
 
 # Define player accuracies (probability of making a shot)
 player_accuracies = {
-    'Player1': 0.50,
-    'Player2': 0.50,
+    'Player1': 0.5,
+    'Player2': 0.5,
     'Player3': 0.5,
     'Player4': 0.5,
 }
@@ -457,9 +487,6 @@ average_cups_left = [
 ]
 
 
-
-
-
 #overrun is how much margin we allow us (bookmaker)to have
 overrun = 0.80
 
@@ -468,6 +495,8 @@ results_odds = OddsCalculator.calculate_winner_odds(results, num_games, overrun)
 print(results_odds)
 
 OddsCalculator.calculate_over_under_throws(results, num_games, overrun)
+
+OddsCalculator.calculate_MVP(results, num_games, overrun)
 
 
 # Create a bar chart
